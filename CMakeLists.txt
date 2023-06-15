@@ -98,7 +98,7 @@ endif()
 
 
 # C_FLAGS
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O2 -std=gnu11 -Wall -DNDEBUG_PRINT -DNPRINT_MALLOC ")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -g -O2 -std=gnu11 -Wall -DNDEBUG_PRINT -DNPRINT_MALLOC ")
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS} -g -O0 -std=gnu11 -Wall -DNDEBUG_PRINT -DNPRINT_MALLOC -DXQC_DEBUG ")
 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -298,7 +298,7 @@ if(PLATFORM MATCHES "mac")
 else()
     target_link_libraries(
         xquic
-        "-ldl -Wl,--whole-archive -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/scripts/xquic.lds"
+       #"-ldl -Wl,--whole-archive -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/scripts/xquic.lds"
         ${SSL_LIB_PATH}
         "-Wl,--no-whole-archive"
         -lpthread
@@ -403,10 +403,10 @@ if (XQC_ENABLE_TESTING)
         target_link_libraries(demo_server xquic ${EVENT_LIB_PATH} -lm)
         target_link_libraries(demo_client xquic ${EVENT_LIB_PATH} -lm)
     else()
-        target_link_libraries(test_server xquic -levent -lm)
-        target_link_libraries(test_client xquic -levent -lm)
-        target_link_libraries(demo_server xquic -levent -lm)
-        target_link_libraries(demo_client xquic -levent -lm)
+        target_link_libraries(test_server xquic -levent -lm -pie -rdynamic)
+        target_link_libraries(test_client xquic -levent -lm -pie -rdynamic)
+        target_link_libraries(demo_server xquic -levent -lm -pie -rdynamic)
+        target_link_libraries(demo_client xquic -levent -lm -pie -rdynamic)
     endif()
 
 endif()
